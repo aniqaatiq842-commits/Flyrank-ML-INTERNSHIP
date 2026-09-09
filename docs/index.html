@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Predicting Future Content Performance Decline</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f8fa;
+      color: #202124;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+      padding: 40px 25px;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 70px 25px;
+    }
+
+    header .container {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #374151;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 46px;
+      line-height: 1.15;
+      max-width: 900px;
+      margin-bottom: 22px;
+    }
+
+    .subtitle {
+      font-size: 19px;
+      color: #d1d5db;
+      max-width: 800px;
+    }
+
+    h2 {
+      font-size: 30px;
+      margin: 55px 0 20px;
+      color: #111827;
+    }
+
+    h3 {
+      font-size: 21px;
+      margin: 30px 0 12px;
+    }
+
+    p {
+      margin-bottom: 16px;
+    }
+
+    .abstract {
+      background: white;
+      border-left: 5px solid #111827;
+      padding: 28px;
+      margin-top: 35px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .question {
+      background: #eef2ff;
+      padding: 25px;
+      border-radius: 12px;
+      margin: 25px 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin: 30px 0;
+    }
+
+    .pipeline div {
+      background: white;
+      padding: 20px 12px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin: 25px 0;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      background: #111827;
+      color: white;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .highlight {
+      background: #ecfdf5;
+      border-left: 5px solid #10b981;
+      padding: 22px;
+      margin: 25px 0;
+    }
+
+    .artifact {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin: 20px 0;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .artifact pre {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-top: 15px;
+    }
+
+    ol, ul {
+      padding-left: 25px;
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin-bottom: 12px;
+    }
+
+    .recommendation {
+      background: white;
+      padding: 22px;
+      border-radius: 10px;
+      margin: 15px 0;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .number {
+      display: inline-flex;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      background: #111827;
+      color: white;
+      border-radius: 50%;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 70px;
+      background: #111827;
+      color: #d1d5db;
+      padding: 40px 25px;
+      text-align: center;
+    }
+
+    .small {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    @media (max-width: 750px) {
+      h1 {
+        font-size: 34px;
+      }
+
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+    <span class="tag">FlyRank ML Internship Capstone</span>
+
+    <h1>
+      Predicting Future Content Performance Decline
+    </h1>
+
+    <p class="subtitle">
+      A supervised machine-learning study using historical search,
+      engagement, demand, and content signals to predict future
+      content performance trajectories.
+    </p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ABSTRACT -->
+
+  <section>
+    <div class="abstract">
+
+      <h2 style="margin-top:0;">Abstract</h2>
+
+      <p>
+        This study asks whether historical search, engagement, and content
+        signals can predict which content pages are likely to experience
+        meaningful future performance changes. A temporal supervised-learning
+        design was applied to anonymized FlyRank content-performance data,
+        using the previous three calendar months as historical context and
+        the following month as the prediction period. Random Forest and
+        XGBoost models were compared with a most-frequent baseline using a
+        time-based train/test split. The Random Forest achieved 58.57% accuracy
+        and 54.29% balanced accuracy, while XGBoost achieved 62.93% accuracy
+        and 50.55% balanced accuracy. Recent page-level performance was the
+        strongest predictive signal, supporting the use of historical behavior
+        as a prioritization signal while not establishing any causal
+        relationship.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- INTRODUCTION -->
+
+  <section>
+    <h2>1. Introduction</h2>
+
+    <p>
+      Content performance changes over time. Some pages continue to grow,
+      some remain relatively stable, and others experience meaningful declines.
+      Identifying pages that may require attention can therefore be useful for
+      content and SEO decision-making.
+    </p>
+
+    <p>
+      Traditional monitoring approaches often focus on individual performance
+      metrics such as impressions, clicks, or sessions. This study investigates
+      whether combining historical performance, engagement, search-demand
+      signals, and content characteristics can provide a more useful prediction
+      of future performance trajectory.
+    </p>
+
+    <div class="question">
+      Research Question: Can historical search, engagement, and content signals
+      predict which content pages are likely to experience meaningful future
+      performance decline?
+    </div>
+
+    <p>
+      The analysis is framed as a predictive decision-support problem.
+      Predictions are intended to help prioritize pages for human review and
+      do not establish that a particular content intervention causes future
+      performance changes.
+    </p>
+  </section>
+
+  <!-- METHODOLOGY -->
+
+  <section>
+    <h2>2. Methodology</h2>
+
+    <h3>2.1 Research Design</h3>
+
+    <p>
+      The study uses supervised machine learning with a temporal prediction
+      design. Historical information available before a prediction month is
+      used to construct predictors, while the subsequent month is used only
+      to define the future outcome.
+    </p>
+
+    <div class="pipeline">
+      <div>Historical Data</div>
+      <div>Feature Construction</div>
+      <div>Future Outcome</div>
+      <div>ML Models</div>
+      <div>Time-Aware Evaluation</div>
+    </div>
+
+    <h3>2.2 Prediction Unit</h3>
+
+    <p>
+      Each observation represents a content page for a client at a defined
+      prediction month. Page and client identifiers are anonymized and are
+      used only to preserve page-level and client-level boundaries during
+      analysis.
+    </p>
+
+    <h3>2.3 Prediction Window</h3>
+
+    <p>
+      For each prediction month, the previous three calendar months form the
+      historical reference period. The following prediction month is treated
+      as the future outcome period.
+    </p>
+
+    <h3>2.4 Target Definition</h3>
+
+    <p>
+      Performance change was calculated by comparing impressions in the
+      prediction month with the average monthly impressions across the
+      previous three calendar months.
+    </p>
+
+    <p>
+      Pages required at least 30 impressions across the previous three months
+      to receive a target label.
+    </p>
+
+    <table>
+      <tr>
+        <th>Class</th>
+        <th>Definition</th>
+      </tr>
+      <tr>
+        <td>Declining</td>
+        <td>Performance change ≤ −20%</td>
+      </tr>
+      <tr>
+        <td>Stable</td>
+        <td>−20% &lt; performance change &lt; +20%</td>
+      </tr>
+      <tr>
+        <td>Growing</td>
+        <td>Performance change ≥ +20%</td>
+      </tr>
+    </table>
+
+    <h3>2.5 Features</h3>
+
+    <p>
+      The modeling dataset combines historical impressions, clicks, sessions,
+      engaged sessions, engagement time, AI sessions, search-demand signals,
+      backlinks, keyword characteristics, URL characteristics, and content
+      size measures.
+    </p>
+
+    <p>
+      Snapshot publication/deletion fields were excluded from modeling.
+    </p>
+
+    <h3>2.6 Temporal Validation</h3>
+
+    <p>
+      A time-based split was used to reduce temporal leakage and better
+      represent future prediction.
+    </p>
+
+    <table>
+      <tr>
+        <th>Dataset</th>
+        <th>Period</th>
+        <th>Observations</th>
+      </tr>
+      <tr>
+        <td>Training</td>
+        <td>May 2025 – January 2026</td>
+        <td>318,593</td>
+      </tr>
+      <tr>
+        <td>Testing</td>
+        <td>February 2026 – May 2026</td>
+        <td>503,127</td>
+      </tr>
+    </table>
+
+  </section>
+
+  <!-- RESULTS -->
+
+  <section>
+    <h2>3. Results</h2>
+
+    <h3>3.1 Model Comparison</h3>
+
+    <table>
+      <tr>
+        <th>Model</th>
+        <th>Accuracy</th>
+        <th>Balanced Accuracy</th>
+      </tr>
+      <tr>
+        <td>Most Frequent Baseline</td>
+        <td>48.05%</td>
+        <td>33.33%</td>
+      </tr>
+      <tr>
+        <td><strong>Random Forest</strong></td>
+        <td>58.57%</td>
+        <td><strong>54.29%</strong></td>
+      </tr>
+      <tr>
+        <td>XGBoost</td>
+        <td><strong>62.93%</strong></td>
+        <td>50.55%</td>
+      </tr>
+    </table>
+
+    <div class="highlight">
+      <strong>Primary model:</strong> Random Forest was selected because it
+      achieved the highest balanced accuracy and provided more balanced
+      performance across the three target classes.
+    </div>
+
+    <h3>3.2 Confusion Matrix</h3>
+
+    <p>
+      Random Forest confusion matrix. Rows represent actual classes and
+      columns represent predicted classes.
+    </p>
+
+    <table>
+      <tr>
+        <th>Actual / Predicted</th>
+        <th>Declining</th>
+        <th>Growing</th>
+        <th>Stable</th>
+      </tr>
+      <tr>
+        <td><strong>Declining</strong></td>
+        <td>101,715</td>
+        <td>37,249</td>
+        <td>43,181</td>
+      </tr>
+      <tr>
+        <td><strong>Growing</strong></td>
+        <td>31,335</td>
+        <td>160,938</td>
+        <td>49,496</td>
+      </tr>
+      <tr>
+        <td><strong>Stable</strong></td>
+        <td>22,568</td>
+        <td>24,594</td>
+        <td>32,051</td>
+      </tr>
+    </table>
+
+    <p>
+      The model correctly identified many Declining and Growing observations,
+      while the Stable class was more difficult to distinguish. This supports
+      using predictions as prioritization signals rather than definitive
+      classifications.
+    </p>
+
+    <h3>3.3 Feature Importance</h3>
+
+    <table>
+      <tr>
+        <th>Rank</th>
+        <th>Feature</th>
+        <th>Importance</th>
+      </tr>
+      <tr><td>1</td><td>recent_performance_ratio</td><td>0.443592</td></tr>
+      <tr><td>2</td><td>impressions_prev_1m</td><td>0.116804</td></tr>
+      <tr><td>3</td><td>avg_impressions_prev_3m</td><td>0.063676</td></tr>
+      <tr><td>4</td><td>impressions_prev_3m</td><td>0.056629</td></tr>
+      <tr><td>5</td><td>word_count</td><td>0.051534</td></tr>
+      <tr><td>6</td><td>clicks_prev_1m</td><td>0.048842</td></tr>
+      <tr><td>7</td><td>char_count</td><td>0.041411</td></tr>
+      <tr><td>8</td><td>clicks_prev_3m</td><td>0.039837</td></tr>
+      <tr><td>9</td><td>sessions_prev_3m</td><td>0.018735</td></tr>
+      <tr><td>10</td><td>backlinks</td><td>0.016837</td></tr>
+    </table>
+
+    <div class="highlight">
+      <strong>Key finding:</strong> Recent performance ratio was the dominant
+      predictive feature, accounting for approximately 44.4% of Random Forest
+      feature importance.
+    </div>
+
+  </section>
+
+  <!-- LIMITATIONS -->
+
+  <section>
+    <h2>4. Limitations</h2>
+
+    <ol>
+      <li>
+        <strong>Predictive, not causal:</strong> The models identify statistical
+        patterns but do not establish that any feature or intervention causes
+        performance changes.
+      </li>
+
+      <li>
+        <strong>Temporal metadata limitation:</strong> Some content metadata
+        comes from warehouse-level snapshots rather than fully time-versioned
+        historical records.
+      </li>
+
+      <li>
+        <strong>Class imbalance and distribution shift:</strong> Target-class
+        proportions differ between training and testing periods.
+      </li>
+
+      <li>
+        <strong>Stable-class difficulty:</strong> Stable observations were more
+        difficult for the model to classify reliably.
+      </li>
+
+      <li>
+        <strong>Anonymized data:</strong> The public artifact cannot identify
+        specific websites, clients, or content pages.
+      </li>
+
+      <li>
+        <strong>Finite observation period:</strong> The dataset covers a
+        limited historical period and should be re-evaluated on newer data.
+      </li>
+
+      <li>
+        <strong>Decision-support scope:</strong> Predictions should support
+        human review rather than automatically determine content actions.
+      </li>
+    </ol>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+
+  <section>
+    <h2>5. Ranked Recommendations</h2>
+
+    <div class="recommendation">
+      <span class="number">1</span>
+      <strong>Prioritize pages showing recent performance deterioration</strong>
+      <p>
+        Recent performance was the strongest predictive signal, so pages
+        showing sustained deterioration should receive the highest review
+        priority.
+      </p>
+    </div>
+
+    <div class="recommendation">
+      <span class="number">2</span>
+      <strong>Compare recent impressions with historical performance</strong>
+      <p>
+        Recent impressions and three-month averages can help distinguish
+        temporary variation from a meaningful trajectory change.
+      </p>
+    </div>
+
+    <div class="recommendation">
+      <span class="number">3</span>
+      <strong>Investigate clicks and sessions</strong>
+      <p>
+        Declining impressions accompanied by declining clicks or sessions
+        provide additional evidence for human review.
+      </p>
+    </div>
+
+    <div class="recommendation">
+      <span class="number">4</span>
+      <strong>Review content depth and structure</strong>
+      <p>
+        Content size variables contributed to prediction and can provide
+        useful context when reviewing at-risk pages.
+      </p>
+    </div>
+
+    <div class="recommendation">
+      <span class="number">5</span>
+      <strong>Use demand and authority signals as supporting evidence</strong>
+      <p>
+        Search volume, backlinks, keyword characteristics, and category
+        structure should support rather than replace performance analysis.
+      </p>
+    </div>
+
+    <div class="recommendation">
+      <span class="number">6</span>
+      <strong>Keep a human in the decision loop</strong>
+      <p>
+        Model predictions should be used to prioritize review, not treated as
+        guaranteed diagnoses or automated intervention decisions.
+      </p>
+    </div>
+
+    <div class="question">
+      Recommended workflow:
+      Detect deterioration → Compare historical baseline → Check engagement →
+      Review content → Consider demand/authority → Human decision
+    </div>
+  </section>
+
+  <!-- REPRODUCIBILITY -->
+
+  <section>
+    <h2>6. Reproducibility</h2>
+
+    <p>
+      The analysis uses the publicly provided
+      <strong>FlyRank/internship-warehouse</strong> dataset hosted on
+      Hugging Face.
+    </p>
+
+    <p>
+      The analysis uses anonymized daily content-performance data and content
+      metadata. Feature construction, target labeling, temporal splitting,
+      model training, evaluation, and visualization are contained in the
+      accompanying capstone notebook.
+    </p>
+
+    <p>
+      The Random Forest and XGBoost experiments use a fixed random seed of
+      <strong>42</strong>.
+    </p>
+
+    <p>
+      The modeling workflow uses a temporal train/test split rather than a
+      random split. No credentials, private queries, client names, identifying
+      URLs, or raw private exports are included in the public artifact.
+    </p>
+  </section>
+
+  <!-- ACKNOWLEDGMENTS -->
+
+  <section>
+    <h2>7. Acknowledgments & Data Credit</h2>
+
+    <p>
+      This research was completed as part of the FlyRank ML Internship.
+    </p>
+
+    <p>
+      The study uses the publicly provided FlyRank internship datasets hosted
+      on Hugging Face, including the
+      <strong>FlyRank/internship-warehouse</strong> dataset.
+    </p>
+
+    <p>
+      I acknowledge FlyRank for providing the dataset and internship framework
+      that made this analysis possible.
+    </p>
+
+    <p>
+      All conclusions, interpretations, modeling decisions, and limitations
+      presented in this research are the responsibility of the author.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <p>
+    FlyRank ML Internship Capstone
+  </p>
+
+  <p class="small">
+    Predicting Future Content Performance Decline
+  </p>
+</footer>
+
+</body>
+</html>
