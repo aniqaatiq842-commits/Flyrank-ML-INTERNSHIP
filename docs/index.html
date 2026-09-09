@@ -1,34 +1,30 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Predicting Future Content Performance Decline | ML Research</title>
+  <title>Predicting Future Content Performance Decline</title>
 
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     :root {
-      --bg: #080b14;
-      --bg-soft: #0d1220;
-      --card: #111827;
-      --card-light: #151d2e;
-      --border: rgba(255,255,255,0.09);
-      --text: #f3f4f6;
-      --muted: #9ca3af;
+      --bg: #070b14;
+      --surface: #0d1320;
+      --surface-2: #111827;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --muted: #94a3b8;
       --purple: #8b5cf6;
       --blue: #3b82f6;
       --cyan: #22d3ee;
       --green: #34d399;
       --red: #fb7185;
-      --yellow: #fbbf24;
-      --white: #ffffff;
     }
 
     html {
@@ -36,14 +32,17 @@
     }
 
     body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 10% 0%, rgba(139,92,246,0.12), transparent 30%),
-        radial-gradient(circle at 90% 10%, rgba(59,130,246,0.10), transparent 28%),
-        var(--bg);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: var(--bg);
       color: var(--text);
-      line-height: 1.75;
+      line-height: 1.7;
     }
 
     a {
@@ -52,19 +51,21 @@
     }
 
     .container {
-      width: min(1180px, calc(100% - 40px));
+      width: min(1150px, calc(100% - 40px));
       margin: auto;
     }
 
-    /* NAVIGATION */
+    /* =========================
+       NAVBAR
+    ========================= */
 
     nav {
       position: sticky;
       top: 0;
-      z-index: 100;
-      backdrop-filter: blur(18px);
-      background: rgba(8,11,20,0.82);
+      z-index: 1000;
       border-bottom: 1px solid var(--border);
+      background: rgba(7, 11, 20, 0.82);
+      backdrop-filter: blur(18px);
     }
 
     .nav-inner {
@@ -74,30 +75,36 @@
       justify-content: space-between;
     }
 
-    .brand {
+    .logo {
       font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 17px;
     }
 
-    .brand span {
+    .logo span {
       color: var(--purple);
     }
 
     .nav-links {
       display: flex;
-      gap: 25px;
-      font-size: 13px;
+      gap: 24px;
       color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a {
+      transition: 0.2s ease;
     }
 
     .nav-links a:hover {
       color: white;
     }
 
-    /* HERO */
+    /* =========================
+       HERO
+    ========================= */
 
-    header {
-      min-height: 680px;
+    .hero {
+      min-height: 720px;
       display: flex;
       align-items: center;
       position: relative;
@@ -105,38 +112,53 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .hero-grid {
+    .hero::before {
+      content: "";
       position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 50px 50px;
-      mask-image: linear-gradient(to bottom, black, transparent);
+      width: 550px;
+      height: 550px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.14);
+      filter: blur(100px);
+      top: -220px;
+      right: -100px;
     }
 
-    .hero {
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background: rgba(59, 130, 246, 0.10);
+      filter: blur(100px);
+      bottom: -220px;
+      left: -120px;
+    }
+
+    .hero-content {
       position: relative;
+      z-index: 2;
       padding: 100px 0;
     }
 
-    .tag {
+    .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 13px;
-      border: 1px solid rgba(139,92,246,0.35);
-      background: rgba(139,92,246,0.10);
+      gap: 9px;
       color: #c4b5fd;
+      background: rgba(139, 92, 246, 0.10);
+      border: 1px solid rgba(139, 92, 246, 0.30);
       border-radius: 999px;
+      padding: 8px 15px;
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.4px;
       margin-bottom: 28px;
     }
 
-    .tag::before {
+    .eyebrow::before {
       content: "";
       width: 7px;
       height: 7px;
@@ -146,135 +168,151 @@
     }
 
     h1 {
-      max-width: 920px;
-      font-size: clamp(42px, 7vw, 78px);
-      line-height: 1.02;
-      letter-spacing: -3px;
-      margin-bottom: 28px;
+      max-width: 950px;
+      font-size: clamp(46px, 7vw, 82px);
+      line-height: 1;
+      letter-spacing: -4px;
+      margin-bottom: 30px;
     }
 
     .gradient {
-      background: linear-gradient(100deg, #ffffff, #a78bfa, #60a5fa);
+      background: linear-gradient(
+        100deg,
+        #ffffff,
+        #c4b5fd,
+        #60a5fa
+      );
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
 
-    .subtitle {
+    .hero-description {
       max-width: 760px;
-      color: var(--muted);
       font-size: 19px;
-      line-height: 1.7;
+      color: var(--muted);
+      line-height: 1.8;
     }
 
-    .hero-meta {
+    .hero-tags {
+      margin-top: 32px;
       display: flex;
-      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 35px;
+      gap: 10px;
     }
 
-    .meta-pill {
+    .hero-tag {
       padding: 9px 14px;
-      border: 1px solid var(--border);
       border-radius: 10px;
-      background: rgba(255,255,255,0.035);
-      color: #d1d5db;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border);
+      color: #cbd5e1;
       font-size: 13px;
     }
 
-    /* MAIN */
+    /* =========================
+       CONTENT
+    ========================= */
 
     main {
-      padding: 80px 0;
+      padding: 90px 0;
     }
 
     section {
-      margin-bottom: 90px;
-      scroll-margin-top: 95px;
+      margin-bottom: 100px;
+      scroll-margin-top: 100px;
     }
 
-    .section-label {
+    .section-number {
       color: var(--purple);
       font-size: 12px;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 2px;
-      font-weight: 800;
       margin-bottom: 8px;
     }
 
     h2 {
-      font-size: 34px;
-      letter-spacing: -1px;
+      font-size: 38px;
+      letter-spacing: -1.5px;
       margin-bottom: 25px;
     }
 
     h3 {
-      font-size: 21px;
-      margin: 38px 0 13px;
+      font-size: 22px;
+      margin: 40px 0 14px;
     }
 
     p {
-      color: #c4c9d4;
+      max-width: 900px;
+      color: #cbd5e1;
       margin-bottom: 18px;
     }
 
-    /* ABSTRACT */
+    /* =========================
+       ABSTRACT
+    ========================= */
 
     .abstract {
       position: relative;
-      padding: 40px;
+      padding: 42px;
+      border-radius: 24px;
       border: 1px solid var(--border);
-      border-radius: 22px;
       background:
-        linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.04)),
-        var(--card);
+        linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.11),
+          rgba(59, 130, 246, 0.04)
+        ),
+        var(--surface);
       overflow: hidden;
     }
 
-    .abstract::before {
-      content: "";
+    .abstract::after {
+      content: "RESEARCH";
       position: absolute;
-      width: 220px;
-      height: 220px;
-      background: rgba(139,92,246,0.12);
-      filter: blur(70px);
-      right: -70px;
-      top: -70px;
+      right: -25px;
+      bottom: -20px;
+      font-size: 90px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.015);
+      letter-spacing: -5px;
     }
 
     .abstract p {
-      position: relative;
       font-size: 17px;
-      max-width: 950px;
+      position: relative;
+      z-index: 2;
     }
 
-    /* STATS */
+    /* =========================
+       STAT CARDS
+    ========================= */
 
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 15px;
-      margin: 35px 0;
+      margin-top: 30px;
     }
 
-    .stat {
+    .stat-card {
       padding: 25px;
-      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 17px;
+      background: var(--surface);
+      border-radius: 18px;
     }
 
     .stat-value {
-      font-size: 30px;
+      font-size: 31px;
       font-weight: 800;
       letter-spacing: -1px;
     }
 
-    .stat-label {
+    .stat-name {
       color: var(--muted);
       font-size: 13px;
-      margin-top: 5px;
+      margin-top: 4px;
     }
 
     .purple {
@@ -289,204 +327,252 @@
       color: #6ee7b7;
     }
 
-    /* QUESTION */
+    /* =========================
+       RESEARCH QUESTION
+    ========================= */
 
-    .question {
-      padding: 30px;
+    .research-box {
+      padding: 32px;
+      border: 1px solid rgba(139, 92, 246, 0.30);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.12),
+          rgba(59, 130, 246, 0.05)
+        );
+      border-radius: 20px;
       margin: 30px 0;
-      border: 1px solid rgba(139,92,246,0.3);
-      border-radius: 17px;
-      background: linear-gradient(
-        135deg,
-        rgba(139,92,246,0.13),
-        rgba(59,130,246,0.06)
-      );
     }
 
-    .question-label {
+    .research-label {
       color: #a78bfa;
-      font-size: 12px;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      font-weight: 800;
-      margin-bottom: 8px;
+      font-size: 11px;
+      margin-bottom: 10px;
     }
 
-    .question-text {
-      color: white;
-      font-size: 20px;
-      font-weight: 600;
+    .research-question {
+      font-size: 21px;
       line-height: 1.5;
+      font-weight: 700;
     }
 
-    /* PIPELINE */
+    /* =========================
+       PIPELINE
+    ========================= */
 
     .pipeline {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
+      gap: 12px;
       margin: 35px 0;
     }
 
-    .pipeline-step {
-      position: relative;
-      padding: 23px 15px;
-      text-align: center;
-      background: var(--card);
+    .pipeline-card {
+      min-height: 135px;
+      padding: 22px 16px;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 15px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #dbe1ea;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      transition: 0.2s ease;
     }
 
-    .pipeline-step span {
-      display: block;
+    .pipeline-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(139, 92, 246, 0.45);
+    }
+
+    .pipeline-number {
       color: var(--purple);
       font-size: 11px;
+      font-weight: 800;
       margin-bottom: 8px;
     }
 
-    /* TABLE */
+    .pipeline-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
 
-    .table-wrapper {
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-box {
+      width: 100%;
       overflow-x: auto;
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 17px;
       margin: 25px 0;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
       min-width: 600px;
-      background: var(--card);
-    }
-
-    th, td {
-      padding: 16px 18px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
+      border-collapse: collapse;
+      background: var(--surface);
     }
 
     th {
-      background: #171e2e;
-      color: #a78bfa;
+      padding: 16px 18px;
+      background: #151c2b;
+      color: #c4b5fd;
       font-size: 12px;
+      text-align: left;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
     }
 
     td {
-      color: #cdd3df;
+      padding: 16px 18px;
+      border-top: 1px solid var(--border);
+      color: #cbd5e1;
       font-size: 14px;
     }
 
-    tr:last-child td {
-      border-bottom: none;
-    }
-
     tr:hover td {
-      background: rgba(255,255,255,0.025);
+      background: rgba(255, 255, 255, 0.02);
     }
 
-    /* RESULT CARDS */
+    /* =========================
+       RESULTS
+    ========================= */
 
-    .result-grid {
+    .model-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+      gap: 16px;
       margin: 30px 0;
     }
 
-    .result-card {
-      padding: 25px;
+    .model-card {
+      padding: 27px;
+      background: var(--surface);
       border: 1px solid var(--border);
-      background: var(--card);
-      border-radius: 17px;
+      border-radius: 19px;
     }
 
-    .result-card.primary {
-      border-color: rgba(139,92,246,0.5);
-      background: linear-gradient(
-        145deg,
-        rgba(139,92,246,0.14),
-        var(--card)
-      );
+    .model-card.primary {
+      border-color: rgba(139, 92, 246, 0.55);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(139, 92, 246, 0.13),
+          var(--surface)
+        );
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
     }
 
-    .result-card h4 {
-      font-size: 15px;
+    .model-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    .model-name {
+      font-weight: 800;
+      font-size: 17px;
       margin-bottom: 20px;
     }
 
-    .metric {
+    .model-stat {
+      padding: 11px 0;
+      border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
       color: var(--muted);
       font-size: 13px;
     }
 
-    .metric strong {
+    .model-stat strong {
       color: white;
     }
 
-    /* HIGHLIGHT */
+    .selected {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 6px 10px;
+      background: rgba(52, 211, 153, 0.09);
+      color: #6ee7b7;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
 
-    .highlight {
-      padding: 28px;
+    /* =========================
+       FINDING
+    ========================= */
+
+    .finding {
+      padding: 27px;
       border-left: 3px solid var(--green);
-      background: rgba(52,211,153,0.06);
+      background: rgba(52, 211, 153, 0.055);
       border-radius: 0 15px 15px 0;
       margin: 30px 0;
     }
 
-    .highlight strong {
+    .finding strong {
       color: #6ee7b7;
     }
 
-    /* FEATURE BARS */
+    /* =========================
+       FEATURE IMPORTANCE
+    ========================= */
 
     .feature-list {
-      margin: 30px 0;
+      margin-top: 30px;
+      max-width: 900px;
     }
 
-    .feature {
-      margin-bottom: 18px;
+    .feature-item {
+      margin-bottom: 19px;
     }
 
-    .feature-top {
+    .feature-header {
       display: flex;
       justify-content: space-between;
+      gap: 15px;
       font-size: 13px;
       margin-bottom: 7px;
     }
 
     .feature-name {
-      color: #d9dee8;
+      color: #dbe4f0;
     }
 
-    .feature-value {
+    .feature-score {
       color: #a78bfa;
-      font-weight: 700;
+      font-weight: 800;
     }
 
-    .bar {
+    .feature-track {
       height: 8px;
-      background: #1e2637;
-      border-radius: 99px;
+      border-radius: 999px;
+      background: #1c2535;
       overflow: hidden;
     }
 
-    .bar-fill {
+    .feature-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--purple), var(--blue));
-      border-radius: 99px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        var(--purple),
+        var(--blue)
+      );
     }
 
-    /* LIMITATIONS */
+    /* =========================
+       LIMITATIONS
+    ========================= */
 
     .limitations {
       display: grid;
@@ -494,130 +580,173 @@
     }
 
     .limitation {
-      display: flex;
-      gap: 18px;
-      padding: 20px;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 17px;
+      padding: 22px;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--card);
+      background: var(--surface);
+      border-radius: 16px;
     }
 
-    .limitation-number {
-      min-width: 30px;
-      height: 30px;
-      border-radius: 9px;
-      background: rgba(251,113,133,0.10);
-      color: var(--red);
+    .limitation-num {
+      width: 34px;
+      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 9px;
+      background: rgba(251, 113, 133, 0.08);
+      color: var(--red);
       font-size: 12px;
       font-weight: 800;
     }
 
     .limitation strong {
       color: white;
+      display: block;
+      margin-bottom: 4px;
     }
 
-    /* RECOMMENDATIONS */
+    .limitation p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* =========================
+       RECOMMENDATIONS
+    ========================= */
 
     .recommendation {
       display: grid;
-      grid-template-columns: 55px 1fr;
+      grid-template-columns: 48px 1fr;
       gap: 18px;
-      padding: 25px;
-      margin: 14px 0;
-      background: var(--card);
+      padding: 24px;
+      margin: 13px 0;
       border: 1px solid var(--border);
       border-radius: 17px;
-      transition: transform 0.2s, border-color 0.2s;
+      background: var(--surface);
+      transition: 0.2s ease;
     }
 
     .recommendation:hover {
       transform: translateX(5px);
-      border-color: rgba(139,92,246,0.4);
+      border-color: rgba(139, 92, 246, 0.4);
     }
 
-    .number {
-      width: 42px;
-      height: 42px;
+    .rank {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: linear-gradient(
+        135deg,
+        var(--purple),
+        var(--blue)
+      );
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      color: white;
       font-weight: 800;
     }
 
     .recommendation strong {
       color: white;
-      font-size: 16px;
+      display: block;
+      margin-bottom: 5px;
     }
 
     .recommendation p {
-      margin-top: 7px;
-      margin-bottom: 0;
+      margin: 0;
       font-size: 14px;
     }
 
-    /* WORKFLOW */
-
     .workflow {
-      padding: 28px;
-      background: #0c1220;
+      margin-top: 25px;
+      padding: 25px;
+      border-radius: 17px;
       border: 1px solid var(--border);
-      border-radius: 18px;
+      background: #0b111d;
       text-align: center;
-      color: #dbe1ea;
-      font-weight: 600;
+      color: #dbe4f0;
+      font-size: 14px;
+      font-weight: 700;
     }
 
     .workflow span {
       color: var(--purple);
-      margin: 0 7px;
+      padding: 0 5px;
     }
 
-    /* CODE */
+    /* =========================
+       REPRODUCIBILITY
+    ========================= */
 
-    pre {
-      background: #05070d;
-      padding: 22px;
+    .repro-card {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .repro-item {
+      padding: 24px;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 13px;
-      overflow-x: auto;
-      color: #a7f3d0;
-      font-size: 13px;
+      border-radius: 16px;
     }
 
-    /* FOOTER */
+    .repro-title {
+      color: #a78bfa;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .repro-item p {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
 
     footer {
       border-top: 1px solid var(--border);
-      padding: 55px 0;
       background: #05070d;
+      padding: 55px 0;
     }
 
-    .footer-inner {
+    .footer {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       gap: 20px;
+      align-items: center;
     }
 
     .footer-title {
       font-weight: 800;
-      font-size: 18px;
+      font-size: 17px;
     }
 
-    .footer-small {
+    .footer-subtitle {
       color: var(--muted);
       font-size: 13px;
+      margin-top: 3px;
     }
 
-    /* RESPONSIVE */
+    .footer-right {
+      color: var(--muted);
+      font-size: 12px;
+    }
 
-    @media (max-width: 850px) {
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
       .nav-links {
         display: none;
       }
@@ -626,7 +755,38 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .result-grid {
+      .pipeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .model-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .repro-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: min(100% - 26px, 1150px);
+      }
+
+      h1 {
+        font-size: 46px;
+        letter-spacing: -2.5px;
+      }
+
+      h2 {
+        font-size: 31px;
+      }
+
+      .hero {
+        min-height: 620px;
+      }
+
+      .stats {
         grid-template-columns: 1fr;
       }
 
@@ -634,846 +794,1104 @@
         grid-template-columns: 1fr;
       }
 
-      h1 {
-        letter-spacing: -2px;
-      }
-    }
-
-    @media (max-width: 550px) {
-      .container {
-        width: min(100% - 25px, 1180px);
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
       .abstract {
-        padding: 25px;
+        padding: 26px;
       }
 
-      main {
-        padding: 55px 0;
-      }
-
-      section {
-        margin-bottom: 65px;
-      }
-
-      .footer-inner {
+      .footer {
         flex-direction: column;
         align-items: flex-start;
       }
     }
   </style>
-
 </head>
 
 <body>
 
-<!-- NAVIGATION -->
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
+
+  <nav>
+    <div class="container nav-inner">
+
+      <div class="logo">
+        ML<span>Research</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="#introduction">Introduction</a>
+        <a href="#methodology">Methodology</a>
+        <a href="#results">Results</a>
+        <a href="#limitations">Limitations</a>
+        <a href="#recommendations">Recommendations</a>
+      </div>
+
+    </div>
+  </nav>
+
+
+  <!-- =========================
+       HERO
+  ========================= -->
+
+  <header class="hero">
+
+    <div class="container hero-content">
+
+      <div class="eyebrow">
+        FlyRank ML Internship Capstone
+      </div>
+
+      <h1>
+        Predicting Future
+        <span class="gradient">
+          Content Performance Decline
+        </span>
+      </h1>
+
+      <p class="hero-description">
+        A temporal machine-learning study investigating whether historical
+        search, engagement, demand, and content signals can predict future
+        content performance trajectories.
+      </p>
+
+      <div class="hero-tags">
+        <div class="hero-tag">Supervised Learning</div>
+        <div class="hero-tag">Temporal Validation</div>
+        <div class="hero-tag">Random Forest</div>
+        <div class="hero-tag">XGBoost</div>
+        <div class="hero-tag">Decision Support</div>
+      </div>
 
-<nav>
-  <div class="container nav-inner">
-    <div class="brand">ML<span>Research</span></div>
-
-```
-<div class="nav-links">
-  <a href="#introduction">Introduction</a>
-  <a href="#methodology">Methodology</a>
-  <a href="#results">Results</a>
-  <a href="#recommendations">Recommendations</a>
-  <a href="#reproducibility">Reproducibility</a>
-</div>
-```
-
-  </div>
-</nav>
-
-<!-- HERO -->
-
-<header>
-  <div class="hero-grid"></div>
-
-  <div class="container hero">
-
-```
-<div class="tag">FlyRank ML Internship Capstone</div>
-
-<h1>
-  Predicting Future
-  <span class="gradient">Content Performance Decline</span>
-</h1>
-
-<p class="subtitle">
-  A temporal machine-learning study investigating whether historical
-  search, engagement, demand, and content signals can predict future
-  content performance trajectories.
-</p>
-
-<div class="hero-meta">
-  <div class="meta-pill">Supervised Learning</div>
-  <div class="meta-pill">Time-Based Validation</div>
-  <div class="meta-pill">Random Forest + XGBoost</div>
-  <div class="meta-pill">Decision Support</div>
-</div>
-```
-
-  </div>
-</header>
-
-<main class="container">
-
-  <!-- ABSTRACT -->
-
-  <section>
-    <div class="section-label">01 / Overview</div>
-
-```
-<div class="abstract">
-
-  <h2>Abstract</h2>
-
-  <p>
-    This study asks whether historical search, engagement, and content
-    signals can predict which content pages are likely to experience
-    meaningful future performance changes. A temporal supervised-learning
-    design was applied to anonymized FlyRank content-performance data,
-    using the previous three calendar months as historical context and
-    the following month as the prediction period. Random Forest and
-    XGBoost models were compared with a most-frequent baseline using a
-    time-based train/test split. The Random Forest achieved 58.57% accuracy
-    and 54.29% balanced accuracy, while XGBoost achieved 62.93% accuracy
-    and 50.55% balanced accuracy. Recent page-level performance was the
-    strongest predictive signal, supporting the use of historical behavior
-    as a prioritization signal while not establishing any causal
-    relationship.
-  </p>
-
-</div>
-
-<div class="stats">
-
-  <div class="stat">
-    <div class="stat-value purple">58.57%</div>
-    <div class="stat-label">Random Forest Accuracy</div>
-  </div>
-
-  <div class="stat">
-    <div class="stat-value blue">54.29%</div>
-    <div class="stat-label">Best Balanced Accuracy</div>
-  </div>
-
-  <div class="stat">
-    <div class="stat-value green">821K+</div>
-    <div class="stat-label">Usable Labeled Observations</div>
-  </div>
-
-  <div class="stat">
-    <div class="stat-value">177K+</div>
-    <div class="stat-label">Unique Content Pages</div>
-  </div>
-
-</div>
-```
-
-  </section>
-
-  <!-- INTRODUCTION -->
-
-  <section id="introduction">
-
-```
-<div class="section-label">02 / Research Context</div>
-
-<h2>Introduction</h2>
-
-<p>
-  Content performance changes over time. Some pages continue to grow,
-  some remain relatively stable, and others experience meaningful declines.
-  Identifying pages that may require attention can therefore be useful for
-  content and SEO decision-making.
-</p>
-
-<p>
-  Traditional monitoring approaches often focus on individual performance
-  metrics such as impressions, clicks, or sessions. This study investigates
-  whether combining historical performance, engagement, search-demand
-  signals, and content characteristics can provide a more useful prediction
-  of future performance trajectory.
-</p>
-
-<div class="question">
-  <div class="question-label">Research Question</div>
-
-  <div class="question-text">
-    Can historical search, engagement, and content signals predict which
-    content pages are likely to experience meaningful future performance
-    decline?
-  </div>
-</div>
-
-<p>
-  The analysis is framed as a predictive decision-support problem.
-  Predictions are intended to help prioritize pages for human review and
-  do not establish that a particular content intervention causes future
-  performance changes.
-</p>
-```
-
-  </section>
-
-  <!-- METHODOLOGY -->
-
-  <section id="methodology">
-
-```
-<div class="section-label">03 / Approach</div>
-
-<h2>Methodology</h2>
-
-<h3>Research Design</h3>
-
-<p>
-  The study uses supervised machine learning with a temporal prediction
-  design. Historical information available before a prediction month is
-  used to construct predictors, while the subsequent month is used only
-  to define the future outcome.
-</p>
-
-<div class="pipeline">
-
-  <div class="pipeline-step">
-    <span>01</span>
-    Historical Data
-  </div>
-
-  <div class="pipeline-step">
-    <span>02</span>
-    Feature Construction
-  </div>
-
-  <div class="pipeline-step">
-    <span>03</span>
-    Future Outcome
-  </div>
-
-  <div class="pipeline-step">
-    <span>04</span>
-    ML Models
-  </div>
-
-  <div class="pipeline-step">
-    <span>05</span>
-    Time-Aware Evaluation
-  </div>
-
-</div>
-
-<h3>Prediction Unit</h3>
-
-<p>
-  Each observation represents a content page for a client at a defined
-  prediction month. Page and client identifiers are anonymized and are
-  used only to preserve page-level and client-level boundaries during
-  analysis.
-</p>
-
-<h3>Prediction Window</h3>
-
-<p>
-  For each prediction month, the previous three calendar months form the
-  historical reference period. The following prediction month is treated
-  as the future outcome period.
-</p>
-
-<h3>Target Definition</h3>
-
-<p>
-  Performance change was calculated by comparing impressions in the
-  prediction month with the average monthly impressions across the
-  previous three calendar months.
-</p>
-
-<p>
-  Pages required at least 30 impressions across the previous three months
-  to receive a target label.
-</p>
-
-<div class="table-wrapper">
-
-  <table>
-
-    <tr>
-      <th>Class</th>
-      <th>Definition</th>
-    </tr>
-
-    <tr>
-      <td><strong>Declining</strong></td>
-      <td>Performance change ≤ −20%</td>
-    </tr>
-
-    <tr>
-      <td><strong>Stable</strong></td>
-      <td>−20% &lt; performance change &lt; +20%</td>
-    </tr>
-
-    <tr>
-      <td><strong>Growing</strong></td>
-      <td>Performance change ≥ +20%</td>
-    </tr>
-
-  </table>
-
-</div>
-
-<h3>Features</h3>
-
-<p>
-  The modeling dataset combines historical impressions, clicks, sessions,
-  engaged sessions, engagement time, AI sessions, search-demand signals,
-  backlinks, keyword characteristics, URL characteristics, and content
-  size measures.
-</p>
-
-<p>
-  Snapshot publication/deletion fields were excluded from modeling.
-</p>
-
-<h3>Temporal Validation</h3>
-
-<p>
-  A time-based split was used to reduce temporal leakage and better
-  represent future prediction.
-</p>
-
-<div class="table-wrapper">
-
-  <table>
-
-    <tr>
-      <th>Dataset</th>
-      <th>Period</th>
-      <th>Observations</th>
-    </tr>
-
-    <tr>
-      <td>Training</td>
-      <td>May 2025 – January 2026</td>
-      <td>318,593</td>
-    </tr>
-
-    <tr>
-      <td>Testing</td>
-      <td>February 2026 – May 2026</td>
-      <td>503,127</td>
-    </tr>
-
-  </table>
-
-</div>
-```
-
-  </section>
-
-  <!-- RESULTS -->
-
-  <section id="results">
-
-```
-<div class="section-label">04 / Findings</div>
-
-<h2>Results</h2>
-
-<h3>Model Comparison</h3>
-
-<div class="result-grid">
-
-  <div class="result-card">
-
-    <h4>Most Frequent Baseline</h4>
-
-    <div class="metric">
-      Accuracy
-      <strong>48.05%</strong>
     </div>
 
-    <div class="metric">
-      Balanced Accuracy
-      <strong>33.33%</strong>
+  </header>
+
+
+  <main class="container">
+
+
+    <!-- =========================
+         ABSTRACT
+    ========================= -->
+
+    <section>
+
+      <div class="section-number">
+        01 / Overview
+      </div>
+
+      <div class="abstract">
+
+        <h2>Abstract</h2>
+
+        <p>
+          This study asks whether historical search, engagement, and content
+          signals can predict which content pages are likely to experience
+          meaningful future performance changes. A temporal supervised-learning
+          design was applied to anonymized FlyRank content-performance data,
+          using the previous three calendar months as historical context and
+          the following month as the prediction period. Random Forest and
+          XGBoost models were compared with a most-frequent baseline using a
+          time-based train/test split. The Random Forest achieved 58.57%
+          accuracy and 54.29% balanced accuracy, while XGBoost achieved
+          62.93% accuracy and 50.55% balanced accuracy. Recent page-level
+          performance was the strongest predictive signal, supporting the use
+          of historical behavior as a prioritization signal while not
+          establishing any causal relationship.
+        </p>
+
+      </div>
+
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <div class="stat-value purple">58.57%</div>
+          <div class="stat-name">
+            Random Forest Accuracy
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-value blue">54.29%</div>
+          <div class="stat-name">
+            Best Balanced Accuracy
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-value green">821K+</div>
+          <div class="stat-name">
+            Usable Labeled Observations
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-value">177K+</div>
+          <div class="stat-name">
+            Unique Content Pages
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         INTRODUCTION
+    ========================= -->
+
+    <section id="introduction">
+
+      <div class="section-number">
+        02 / Research Context
+      </div>
+
+      <h2>Introduction</h2>
+
+      <p>
+        Content performance changes over time. Some pages continue to grow,
+        some remain relatively stable, and others experience meaningful
+        declines. Identifying pages that may require attention can therefore
+        be useful for content and SEO decision-making.
+      </p>
+
+      <p>
+        Traditional monitoring approaches often focus on individual
+        performance metrics such as impressions, clicks, or sessions. This
+        study investigates whether combining historical performance,
+        engagement, search-demand signals, and content characteristics can
+        provide a more useful prediction of future performance trajectory.
+      </p>
+
+
+      <div class="research-box">
+
+        <div class="research-label">
+          Research Question
+        </div>
+
+        <div class="research-question">
+          Can historical search, engagement, and content signals predict
+          which content pages are likely to experience meaningful future
+          performance decline?
+        </div>
+
+      </div>
+
+
+      <p>
+        The analysis is framed as a predictive decision-support problem.
+        Predictions are intended to help prioritize pages for human review
+        and do not establish that a particular content intervention causes
+        future performance changes.
+      </p>
+
+    </section>
+
+
+    <!-- =========================
+         METHODOLOGY
+    ========================= -->
+
+    <section id="methodology">
+
+      <div class="section-number">
+        03 / Research Design
+      </div>
+
+      <h2>Methodology</h2>
+
+
+      <h3>Research Design</h3>
+
+      <p>
+        The study uses supervised machine learning with a temporal prediction
+        design. Historical information available before a prediction month is
+        used to construct predictors, while the subsequent month is used only
+        to define the future outcome.
+      </p>
+
+
+      <div class="pipeline">
+
+        <div class="pipeline-card">
+          <div class="pipeline-number">01</div>
+          <div class="pipeline-title">
+            Historical Data
+          </div>
+        </div>
+
+        <div class="pipeline-card">
+          <div class="pipeline-number">02</div>
+          <div class="pipeline-title">
+            Feature Construction
+          </div>
+        </div>
+
+        <div class="pipeline-card">
+          <div class="pipeline-number">03</div>
+          <div class="pipeline-title">
+            Future Outcome
+          </div>
+        </div>
+
+        <div class="pipeline-card">
+          <div class="pipeline-number">04</div>
+          <div class="pipeline-title">
+            ML Models
+          </div>
+        </div>
+
+        <div class="pipeline-card">
+          <div class="pipeline-number">05</div>
+          <div class="pipeline-title">
+            Time-Aware Evaluation
+          </div>
+        </div>
+
+      </div>
+
+
+      <h3>Prediction Unit</h3>
+
+      <p>
+        Each observation represents a content page for a client at a defined
+        prediction month. Page and client identifiers are anonymized and are
+        used only to preserve page-level and client-level boundaries during
+        analysis.
+      </p>
+
+
+      <h3>Prediction Window</h3>
+
+      <p>
+        For each prediction month, the previous three calendar months form
+        the historical reference period. The following prediction month is
+        treated as the future outcome period.
+      </p>
+
+
+      <h3>Target Definition</h3>
+
+      <p>
+        Performance change was calculated by comparing impressions in the
+        prediction month with the average monthly impressions across the
+        previous three calendar months.
+      </p>
+
+      <p>
+        Pages required at least 30 impressions across the previous three
+        months to receive a target label.
+      </p>
+
+
+      <div class="table-box">
+
+        <table>
+
+          <tr>
+            <th>Class</th>
+            <th>Definition</th>
+          </tr>
+
+          <tr>
+            <td><strong>Declining</strong></td>
+            <td>
+              Performance change ≤ −20%
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>Stable</strong></td>
+            <td>
+              −20% &lt; performance change &lt; +20%
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>Growing</strong></td>
+            <td>
+              Performance change ≥ +20%
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <h3>Features</h3>
+
+      <p>
+        The modeling dataset combines historical impressions, clicks,
+        sessions, engaged sessions, engagement time, AI sessions,
+        search-demand signals, backlinks, keyword characteristics, URL
+        characteristics, and content size measures.
+      </p>
+
+      <p>
+        Snapshot publication/deletion fields were excluded from modeling.
+      </p>
+
+
+      <h3>Temporal Validation</h3>
+
+      <p>
+        A time-based split was used to reduce temporal leakage and better
+        represent future prediction.
+      </p>
+
+
+      <div class="table-box">
+
+        <table>
+
+          <tr>
+            <th>Dataset</th>
+            <th>Period</th>
+            <th>Observations</th>
+          </tr>
+
+          <tr>
+            <td>Training</td>
+            <td>May 2025 – January 2026</td>
+            <td>318,593</td>
+          </tr>
+
+          <tr>
+            <td>Testing</td>
+            <td>February 2026 – May 2026</td>
+            <td>503,127</td>
+          </tr>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RESULTS
+    ========================= -->
+
+    <section id="results">
+
+      <div class="section-number">
+        04 / Findings
+      </div>
+
+      <h2>Results</h2>
+
+
+      <h3>Model Comparison</h3>
+
+
+      <div class="model-grid">
+
+        <div class="model-card">
+
+          <div class="model-label">
+            BASELINE
+          </div>
+
+          <div class="model-name">
+            Most Frequent
+          </div>
+
+          <div class="model-stat">
+            Accuracy
+            <strong>48.05%</strong>
+          </div>
+
+          <div class="model-stat">
+            Balanced Accuracy
+            <strong>33.33%</strong>
+          </div>
+
+        </div>
+
+
+        <div class="model-card primary">
+
+          <div class="model-label">
+            PRIMARY MODEL
+          </div>
+
+          <div class="model-name">
+            Random Forest
+          </div>
+
+          <div class="model-stat">
+            Accuracy
+            <strong>58.57%</strong>
+          </div>
+
+          <div class="model-stat">
+            Balanced Accuracy
+            <strong>54.29%</strong>
+          </div>
+
+          <div class="selected">
+            Selected
+          </div>
+
+        </div>
+
+
+        <div class="model-card">
+
+          <div class="model-label">
+            COMPARISON MODEL
+          </div>
+
+          <div class="model-name">
+            XGBoost
+          </div>
+
+          <div class="model-stat">
+            Accuracy
+            <strong>62.93%</strong>
+          </div>
+
+          <div class="model-stat">
+            Balanced Accuracy
+            <strong>50.55%</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="finding">
+
+        <strong>Primary finding:</strong>
+        Random Forest was selected as the primary model because it achieved
+        the highest balanced accuracy and provided more balanced performance
+        across the three target classes.
+
+      </div>
+
+
+      <h3>Confusion Matrix</h3>
+
+      <p>
+        Random Forest confusion matrix. Rows represent actual classes and
+        columns represent predicted classes.
+      </p>
+
+
+      <div class="table-box">
+
+        <table>
+
+          <tr>
+            <th>Actual / Predicted</th>
+            <th>Declining</th>
+            <th>Growing</th>
+            <th>Stable</th>
+          </tr>
+
+          <tr>
+            <td><strong>Declining</strong></td>
+            <td>101,715</td>
+            <td>37,249</td>
+            <td>43,181</td>
+          </tr>
+
+          <tr>
+            <td><strong>Growing</strong></td>
+            <td>31,335</td>
+            <td>160,938</td>
+            <td>49,496</td>
+          </tr>
+
+          <tr>
+            <td><strong>Stable</strong></td>
+            <td>22,568</td>
+            <td>24,594</td>
+            <td>32,051</td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <p>
+        The model correctly identified many Declining and Growing
+        observations, while the Stable class was more difficult to
+        distinguish. This supports using predictions as prioritization
+        signals rather than definitive classifications.
+      </p>
+
+
+      <h3>Feature Importance</h3>
+
+      <p>
+        The Random Forest feature importance analysis identified recent
+        page-level performance as the dominant predictive signal.
+      </p>
+
+
+      <div class="feature-list">
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              recent_performance_ratio
+            </span>
+            <span class="feature-score">44.36%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:100%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              impressions_prev_1m
+            </span>
+            <span class="feature-score">11.68%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:26.3%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              avg_impressions_prev_3m
+            </span>
+            <span class="feature-score">6.37%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:14.4%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              impressions_prev_3m
+            </span>
+            <span class="feature-score">5.66%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:12.8%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              word_count
+            </span>
+            <span class="feature-score">5.15%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:11.6%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              clicks_prev_1m
+            </span>
+            <span class="feature-score">4.88%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:11%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              char_count
+            </span>
+            <span class="feature-score">4.14%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:9.3%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              clicks_prev_3m
+            </span>
+            <span class="feature-score">3.98%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:9%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              sessions_prev_3m
+            </span>
+            <span class="feature-score">1.87%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:4.2%"></div>
+          </div>
+        </div>
+
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <span class="feature-name">
+              backlinks
+            </span>
+            <span class="feature-score">1.68%</span>
+          </div>
+          <div class="feature-track">
+            <div class="feature-fill" style="width:3.8%"></div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="finding">
+
+        <strong>Key finding:</strong>
+        Recent performance ratio was the dominant predictive feature,
+        accounting for approximately 44.4% of Random Forest feature
+        importance. Feature importance describes predictive behavior and
+        should not be interpreted as evidence of causality.
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         LIMITATIONS
+    ========================= -->
+
+    <section id="limitations">
+
+      <div class="section-number">
+        05 / Critical Evaluation
+      </div>
+
+      <h2>Limitations</h2>
+
+
+      <div class="limitations">
+
+        <div class="limitation">
+          <div class="limitation-num">01</div>
+          <div>
+            <strong>Predictive, not causal</strong>
+            <p>
+              The models identify statistical patterns but do not establish
+              that any feature or intervention causes performance changes.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="limitation">
+          <div class="limitation-num">02</div>
+          <div>
+            <strong>Temporal metadata limitation</strong>
+            <p>
+              Some content metadata comes from warehouse-level snapshots
+              rather than fully time-versioned historical records.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="limitation">
+          <div class="limitation-num">03</div>
+          <div>
+            <strong>Class imbalance and distribution shift</strong>
+            <p>
+              Target-class proportions differ between training and testing
+              periods.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="limitation">
+          <div class="limitation-num">04</div>
+          <div>
+            <strong>Stable-class difficulty</strong>
+            <p>
+              Stable observations were more difficult for the model to
+              classify reliably.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="limitation">
+          <div class="limitation-num">05</div>
+          <div>
+            <strong>Anonymized data</strong>
+            <p>
+              The public artifact cannot identify specific websites, clients,
+              or content pages.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="limitation">
+          <div class="limitation-num">06</div>
+          <div>
+            <strong>Finite observation period</strong>
+            <p>
+              The dataset covers a limited historical period and should be
+              re-evaluated on newer data.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="limitation">
+          <div class="limitation-num">07</div>
+          <div>
+            <strong>Decision-support scope</strong>
+            <p>
+              Predictions should support human review rather than
+              automatically determine content actions.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RECOMMENDATIONS
+    ========================= -->
+
+    <section id="recommendations">
+
+      <div class="section-number">
+        06 / Action Framework
+      </div>
+
+      <h2>Ranked Recommendations</h2>
+
+
+      <div class="recommendation">
+
+        <div class="rank">1</div>
+
+        <div>
+          <strong>
+            Prioritize pages showing recent performance deterioration
+          </strong>
+
+          <p>
+            Recent performance was the strongest predictive signal, so pages
+            showing sustained deterioration should receive the highest review
+            priority.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="recommendation">
+
+        <div class="rank">2</div>
+
+        <div>
+          <strong>
+            Compare recent impressions with historical performance
+          </strong>
+
+          <p>
+            Recent impressions and three-month averages can help distinguish
+            temporary variation from a meaningful trajectory change.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="recommendation">
+
+        <div class="rank">3</div>
+
+        <div>
+          <strong>
+            Investigate clicks and sessions
+          </strong>
+
+          <p>
+            Declining impressions accompanied by declining clicks or sessions
+            provide additional evidence for human review.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="recommendation">
+
+        <div class="rank">4</div>
+
+        <div>
+          <strong>
+            Review content depth and structure
+          </strong>
+
+          <p>
+            Content size variables contributed to prediction and can provide
+            useful context when reviewing at-risk pages.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="recommendation">
+
+        <div class="rank">5</div>
+
+        <div>
+          <strong>
+            Use demand and authority signals as supporting evidence
+          </strong>
+
+          <p>
+            Search volume, backlinks, keyword characteristics, and category
+            structure should support rather than replace performance analysis.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="recommendation">
+
+        <div class="rank">6</div>
+
+        <div>
+          <strong>
+            Keep a human in the decision loop
+          </strong>
+
+          <p>
+            Model predictions should be used to prioritize review, not
+            treated as guaranteed diagnoses or automated intervention
+            decisions.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="workflow">
+
+        Detect deterioration
+        <span>→</span>
+
+        Compare baseline
+        <span>→</span>
+
+        Check engagement
+        <span>→</span>
+
+        Review content
+        <span>→</span>
+
+        Consider demand
+        <span>→</span>
+
+        Human decision
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         REPRODUCIBILITY
+    ========================= -->
+
+    <section id="reproducibility">
+
+      <div class="section-number">
+        07 / Reproducibility
+      </div>
+
+      <h2>Reproducibility</h2>
+
+      <p>
+        The analysis uses the publicly provided
+        <strong>FlyRank/internship-warehouse</strong> dataset hosted on
+        Hugging Face.
+      </p>
+
+      <div class="repro-card">
+
+        <div class="repro-item">
+
+          <div class="repro-title">
+            Data
+          </div>
+
+          <p>
+            Anonymized daily content-performance data and content metadata
+            were used for the study.
+          </p>
+
+        </div>
+
+
+        <div class="repro-item">
+
+          <div class="repro-title">
+            Prediction Design
+          </div>
+
+          <p>
+            Previous three calendar months were used as historical context,
+            followed by the prediction month.
+          </p>
+
+        </div>
+
+
+        <div class="repro-item">
+
+          <div class="repro-title">
+            Validation
+          </div>
+
+          <p>
+            A temporal train/test split was used instead of a random split.
+          </p>
+
+        </div>
+
+
+        <div class="repro-item">
+
+          <div class="repro-title">
+            Random Seed
+          </div>
+
+          <p>
+            Random Forest and XGBoost experiments use random seed
+            <strong>42</strong>.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <p style="margin-top:25px;">
+        Feature construction, target labeling, temporal splitting, model
+        training, evaluation, and visualization are contained in the
+        accompanying capstone notebook.
+      </p>
+
+      <p>
+        No credentials, private queries, client names, identifying URLs, or
+        raw private exports are included in the public artifact.
+      </p>
+
+    </section>
+
+
+    <!-- =========================
+         ACKNOWLEDGMENTS
+    ========================= -->
+
+    <section>
+
+      <div class="section-number">
+        08 / Data Credit
+      </div>
+
+      <h2>Acknowledgments & Data Credit</h2>
+
+      <p>
+        This research was completed as part of the FlyRank ML Internship.
+      </p>
+
+      <p>
+        The study uses the publicly provided FlyRank internship datasets
+        hosted on Hugging Face, including the
+        <strong>FlyRank/internship-warehouse</strong> dataset.
+      </p>
+
+      <p>
+        I acknowledge FlyRank for providing the dataset and internship
+        framework that made this analysis possible.
+      </p>
+
+      <p>
+        All conclusions, interpretations, modeling decisions, and
+        limitations presented in this research are the responsibility of
+        the author.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <div class="container footer">
+
+      <div>
+
+        <div class="footer-title">
+          ML Research · FlyRank Capstone
+        </div>
+
+        <div class="footer-subtitle">
+          Predicting Future Content Performance Decline
+        </div>
+
+      </div>
+
+      <div class="footer-right">
+        Reproducible decision-support research
+      </div>
+
     </div>
 
-  </div>
-
-  <div class="result-card primary">
-
-    <h4>Random Forest · Primary</h4>
-
-    <div class="metric">
-      Accuracy
-      <strong>58.57%</strong>
-    </div>
-
-    <div class="metric">
-      Balanced Accuracy
-      <strong>54.29%</strong>
-    </div>
-
-  </div>
-
-  <div class="result-card">
-
-    <h4>XGBoost</h4>
-
-    <div class="metric">
-      Accuracy
-      <strong>62.93%</strong>
-    </div>
-
-    <div class="metric">
-      Balanced Accuracy
-      <strong>50.55%</strong>
-    </div>
-
-  </div>
-
-</div>
-
-<div class="highlight">
-  <strong>Primary finding:</strong>
-  Random Forest was selected as the primary model because it achieved the
-  highest balanced accuracy and provided more balanced performance across
-  the three target classes.
-</div>
-
-<h3>Confusion Matrix</h3>
-
-<p>
-  Random Forest confusion matrix. Rows represent actual classes and
-  columns represent predicted classes.
-</p>
-
-<div class="table-wrapper">
-
-  <table>
-
-    <tr>
-      <th>Actual / Predicted</th>
-      <th>Declining</th>
-      <th>Growing</th>
-      <th>Stable</th>
-    </tr>
-
-    <tr>
-      <td><strong>Declining</strong></td>
-      <td>101,715</td>
-      <td>37,249</td>
-      <td>43,181</td>
-    </tr>
-
-    <tr>
-      <td><strong>Growing</strong></td>
-      <td>31,335</td>
-      <td>160,938</td>
-      <td>49,496</td>
-    </tr>
-
-    <tr>
-      <td><strong>Stable</strong></td>
-      <td>22,568</td>
-      <td>24,594</td>
-      <td>32,051</td>
-    </tr>
-
-  </table>
-
-</div>
-
-<p>
-  The model correctly identified many Declining and Growing observations,
-  while the Stable class was more difficult to distinguish. This supports
-  using predictions as prioritization signals rather than definitive
-  classifications.
-</p>
-
-<h3>Feature Importance</h3>
-
-<p>
-  The Random Forest feature importance analysis identified recent
-  page-level performance as the dominant predictive signal.
-</p>
-
-<div class="feature-list">
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">recent_performance_ratio</span>
-      <span class="feature-value">44.36%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:100%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">impressions_prev_1m</span>
-      <span class="feature-value">11.68%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:26.3%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">avg_impressions_prev_3m</span>
-      <span class="feature-value">6.37%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:14.4%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">impressions_prev_3m</span>
-      <span class="feature-value">5.66%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:12.8%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">word_count</span>
-      <span class="feature-value">5.15%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:11.6%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">clicks_prev_1m</span>
-      <span class="feature-value">4.88%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:11%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">char_count</span>
-      <span class="feature-value">4.14%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:9.3%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">clicks_prev_3m</span>
-      <span class="feature-value">3.98%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:9%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">sessions_prev_3m</span>
-      <span class="feature-value">1.87%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:4.2%"></div>
-    </div>
-  </div>
-
-  <div class="feature">
-    <div class="feature-top">
-      <span class="feature-name">backlinks</span>
-      <span class="feature-value">1.68%</span>
-    </div>
-    <div class="bar">
-      <div class="bar-fill" style="width:3.8%"></div>
-    </div>
-  </div>
-
-</div>
-
-<div class="highlight">
-  <strong>Key finding:</strong>
-  Recent performance ratio was the dominant predictive feature,
-  accounting for approximately 44.4% of Random Forest feature importance.
-  Feature importance describes predictive behavior and should not be
-  interpreted as evidence of causality.
-</div>
-```
-
-  </section>
-
-  <!-- LIMITATIONS -->
-
-  <section>
-
-```
-<div class="section-label">05 / Critical Evaluation</div>
-
-<h2>Limitations</h2>
-
-<div class="limitations">
-
-  <div class="limitation">
-    <div class="limitation-number">01</div>
-    <div>
-      <strong>Predictive, not causal</strong>
-      <p>The models identify statistical patterns but do not establish that any feature or intervention causes performance changes.</p>
-    </div>
-  </div>
-
-  <div class="limitation">
-    <div class="limitation-number">02</div>
-    <div>
-      <strong>Temporal metadata limitation</strong>
-      <p>Some content metadata comes from warehouse-level snapshots rather than fully time-versioned historical records.</p>
-    </div>
-  </div>
-
-  <div class="limitation">
-    <div class="limitation-number">03</div>
-    <div>
-      <strong>Class imbalance and distribution shift</strong>
-      <p>Target-class proportions differ between training and testing periods.</p>
-    </div>
-  </div>
-
-  <div class="limitation">
-    <div class="limitation-number">04</div>
-    <div>
-      <strong>Stable-class difficulty</strong>
-      <p>Stable observations were more difficult for the model to classify reliably.</p>
-    </div>
-  </div>
-
-  <div class="limitation">
-    <div class="limitation-number">05</div>
-    <div>
-      <strong>Anonymized data</strong>
-      <p>The public artifact cannot identify specific websites, clients, or content pages.</p>
-    </div>
-  </div>
-
-  <div class="limitation">
-    <div class="limitation-number">06</div>
-    <div>
-      <strong>Finite observation period</strong>
-      <p>The dataset covers a limited historical period and should be re-evaluated on newer data.</p>
-    </div>
-  </div>
-
-  <div class="limitation">
-    <div class="limitation-number">07</div>
-    <div>
-      <strong>Decision-support scope</strong>
-      <p>Predictions should support human review rather than automatically determine content actions.</p>
-    </div>
-  </div>
-
-</div>
-```
-
-  </section>
-
-  <!-- RECOMMENDATIONS -->
-
-  <section id="recommendations">
-
-```
-<div class="section-label">06 / Action Framework</div>
-
-<h2>Ranked Recommendations</h2>
-
-<div class="recommendation">
-  <div class="number">1</div>
-  <div>
-    <strong>Prioritize pages showing recent performance deterioration</strong>
-    <p>
-      Recent performance was the strongest predictive signal, so pages
-      showing sustained deterioration should receive the highest review
-      priority.
-    </p>
-  </div>
-</div>
-
-<div class="recommendation">
-  <div class="number">2</div>
-  <div>
-    <strong>Compare recent impressions with historical performance</strong>
-    <p>
-      Recent impressions and three-month averages can help distinguish
-      temporary variation from a meaningful trajectory change.
-    </p>
-  </div>
-</div>
-
-<div class="recommendation">
-  <div class="number">3</div>
-  <div>
-    <strong>Investigate clicks and sessions</strong>
-    <p>
-      Declining impressions accompanied by declining clicks or sessions
-      provide additional evidence for human review.
-    </p>
-  </div>
-</div>
-
-<div class="recommendation">
-  <div class="number">4</div>
-  <div>
-    <strong>Review content depth and structure</strong>
-    <p>
-      Content size variables contributed to prediction and can provide
-      useful context when reviewing at-risk pages.
-    </p>
-  </div>
-</div>
-
-<div class="recommendation">
-  <div class="number">5</div>
-  <div>
-    <strong>Use demand and authority signals as supporting evidence</strong>
-    <p>
-      Search volume, backlinks, keyword characteristics, and category
-      structure should support rather than replace performance analysis.
-    </p>
-  </div>
-</div>
-
-<div class="recommendation">
-  <div class="number">6</div>
-  <div>
-    <strong>Keep a human in the decision loop</strong>
-    <p>
-      Model predictions should be used to prioritize review, not treated as
-      guaranteed diagnoses or automated intervention decisions.
-    </p>
-  </div>
-</div>
-
-<div class="workflow">
-  Detect deterioration
-  <span>→</span>
-  Compare baseline
-  <span>→</span>
-  Check engagement
-  <span>→</span>
-  Review content
-  <span>→</span>
-  Consider demand
-  <span>→</span>
-  Human decision
-</div>
-```
-
-  </section>
-
-  <!-- REPRODUCIBILITY -->
-
-  <section id="reproducibility">
-
-```
-<div class="section-label">07 / Reproducibility</div>
-
-<h2>Reproducibility</h2>
-
-<p>
-  The analysis uses the publicly provided
-  <strong>FlyRank/internship-warehouse</strong> dataset hosted on
-  Hugging Face.
-</p>
-
-<p>
-  The analysis uses anonymized daily content-performance data and content
-  metadata. Feature construction, target labeling, temporal splitting,
-  model training, evaluation, and visualization are contained in the
-  accompanying capstone notebook.
-</p>
-
-<p>
-  The Random Forest and XGBoost experiments use a fixed random seed of
-  <strong>42</strong>.
-</p>
-
-<p>
-  The modeling workflow uses a temporal train/test split rather than a
-  random split. No credentials, private queries, client names, identifying
-  URLs, or raw private exports are included in the public artifact.
-</p>
-```
-
-  </section>
-
-  <!-- ACKNOWLEDGMENTS -->
-
-  <section>
-
-```
-<div class="section-label">08 / Data Credit</div>
-
-<h2>Acknowledgments & Data Credit</h2>
-
-<p>
-  This research was completed as part of the FlyRank ML Internship.
-</p>
-
-<p>
-  The study uses the publicly provided FlyRank internship datasets hosted
-  on Hugging Face, including the
-  <strong>FlyRank/internship-warehouse</strong> dataset.
-</p>
-
-<p>
-  I acknowledge FlyRank for providing the dataset and internship framework
-  that made this analysis possible.
-</p>
-
-<p>
-  All conclusions, interpretations, modeling decisions, and limitations
-  presented in this research are the responsibility of the author.
-</p>
-```
-
-  </section>
-
-</main>
-
-<footer>
-
-  <div class="container footer-inner">
-
-```
-<div>
-  <div class="footer-title">ML Research · FlyRank Capstone</div>
-  <div class="footer-small">
-    Predicting Future Content Performance Decline
-  </div>
-</div>
-
-<div class="footer-small">
-  Built as a reproducible decision-support study
-</div>
-```
-
-  </div>
-
-</footer>
+  </footer>
 
 </body>
 </html>
